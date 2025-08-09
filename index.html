@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>🎉 Lucky Life Profile</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Quicksand:wght@400;600&display=swap');
+    body {
+      font-family: 'Quicksand', sans-serif;
+      background: #fff8f0;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      flex-direction: column;
+      transition: background 0.3s, color 0.3s;
+    }
+    .dark-mode {
+      background: #1c1c2c;
+      color: #f0f0f0;
+    }
+    .container {
+      background: #ffffffcc;
+      border-radius: 20px;
+      padding: 30px;
+      max-width: 550px;
+      width: 90%;
+      box-shadow: 0 0 20px rgba(0,0,0,0.15);
+      text-align: center;
+      position: relative;
+    }
+    .dark-mode .container {
+      background: #2e2e4eaa;
+    }
+    h2 {
+      margin-bottom: 20px;
+      font-size: 28px;
+      color: #ff4081;
+    }
+    input, button {
+      width: 100%;
+      padding: 14px;
+      margin: 10px 0;
+      border-radius: 10px;
+      border: none;
+      font-size: 16px;
+      box-sizing: border-box;
+    }
+    button {
+      background: #ff4081;
+      color: white;
+      cursor: pointer;
+      font-weight: 600;
+    }
+    button:hover {
+      background: #e91e63;
+    }
+    .button-group {
+      display: flex;
+      gap: 10px;
+    }
+    #darkModeToggle {
+      position: absolute;
+      top: 10px;
+      right: 15px;
+      font-size: 22px;
+      background: none;
+      border: none;
+      cursor: pointer;
+      color: inherit;
+    }
+    #bubbles {
+      margin-top: 30px;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 20px;
+    }
+    .bubble {
+      background: #ffe4ec;
+      border-radius: 20px;
+      padding: 15px;
+      width: 140px;
+      text-align: center;
+      font-size: 15px;
+      font-weight: bold;
+      animation: pop 0.6s ease forwards;
+      transform: scale(0);
+    }
+    .dark-mode .bubble {
+      background: #444466;
+    }
+    @keyframes pop {
+      100% {
+        transform: scale(1);
+      }
+    }
+    .color-box {
+      width: 20px;
+      height: 20px;
+      display: inline-block;
+      border-radius: 50%;
+      border: 2px solid #444;
+      margin-left: 6px;
+      vertical-align: middle;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <button id="darkModeToggle" onclick="toggleDarkMode()">🌙</button>
+    <h2>🔮 Reveal Your Lucky Profile!</h2>
+    <form id="profileForm">
+      <input type="text" id="name" placeholder="Enter your name ✍️" required>
+      <input type="date" id="dob" required>
+      <div class="button-group">
+        <button type="submit">✨ Reveal</button>
+        <button type="button" onclick="resetForm()">🔄 Reset</button>
+      </div>
+    </form>
+    <div id="bubbles"></div>
+  </div>
+
+<script>
+  document.getElementById("profileForm").addEventListener("submit", function(e) {
+    e.preventDefault();
+    const name = document.getElementById("name").value.trim();
+    const dob = document.getElementById("dob").value;
+    if (!name || !dob) return alert("Please fill out both fields!");
+
+    const luckyNumber = calcLuckyNumber(dob);
+    const zodiac = getZodiac(dob);
+    const { colorName, colorHex } = getLuckyColor(luckyNumber);
+    const element = getElement(zodiac);
+    const marriage = getMarriageAge(zodiac);
+    const kids = getFutureKids(zodiac);
+    const career = getCareer(zodiac);
+    const match = getLoveMatch(zodiac);
+
+    const bubbleArea = document.getElementById("bubbles");
+    bubbleArea.innerHTML = "";
+
+    const info = [
+      { icon: "🔢", text: `Lucky Number: ${luckyNumber}`, color: "#ffe4ec" },
+      { icon: "🎨", text: `Color: ${colorName} <span class="color-box" style="background:${colorHex}"></span>`, color: colorHex },
+      { icon: "♈", text: `Zodiac: ${zodiac}`, color: "#ffddee" },
+      { icon: "🌊", text: `Element: ${element}`, color: "#ddeeff" },
+      { icon: "💍", text: `Marry Around: ${marriage}`, color: "#ffeedd" },
+      { icon: "👶", text: `Children: ${kids}`, color: "#e0ffe0" },
+      { icon: "🚀", text: `Career: ${career}`, color: "#e0f7ff" },
+      { icon: "❤️", text: `Love Match: ${match}`, color: "#ffd6d6" }
+    ];
+
+    info.forEach((i, idx) => {
+      const div = document.createElement("div");
+      div.className = "bubble";
+      div.style.background = i.color;
+      div.style.animationDelay = `${idx * 0.2}s`;
+      div.innerHTML = `${i.icon}<br>${i.text}`;
+      bubbleArea.appendChild(div);
+    });
+  });
+
+  function calcLuckyNumber(d) {
+    let sum = [...d.replace(/-/g, '')].reduce((a, b) => a + (+b), 0);
+    while (sum > 9) sum = [...sum.toString()].reduce((a, b) => a + (+b), 0);
+    return sum;
+  }
+
+  function getZodiac(d) {
+    const date = new Date(d), day = date.getDate(), m = date.getMonth() + 1;
+    if ((m == 1 && day >= 20) || (m == 2 && day <= 18)) return "Aquarius";
+    if ((m == 2 && day >= 19) || (m == 3 && day <= 20)) return "Pisces";
+    if ((m == 3 && day >= 21) || (m == 4 && day <= 19)) return "Aries";
+    if ((m == 4 && day >= 20) || (m == 5 && day <= 20)) return "Taurus";
+    if ((m == 5 && day >= 21) || (m == 6 && day <= 20)) return "Gemini";
+    if ((m == 6 && day >= 21) || (m == 7 && day <= 22)) return "Cancer";
+    if ((m == 7 && day >= 23) || (m == 8 && day <= 22)) return "Leo";
+    if ((m == 8 && day >= 23) || (m == 9 && day <= 22)) return "Virgo";
+    if ((m == 9 && day >= 23) || (m == 10 && day <= 22)) return "Libra";
+    if ((m == 10 && day >= 23) || (m == 11 && day <= 21)) return "Scorpio";
+    if ((m == 11 && day >= 22) || (m == 12 && day <= 21)) return "Sagittarius";
+    return "Capricorn";
+  }
+
+  function getLuckyColor(n) {
+    const colors = {
+      1: { colorName: "Red", colorHex: "#ff4d4d" },
+      2: { colorName: "Orange", colorHex: "#ff9933" },
+      3: { colorName: "Yellow", colorHex: "#ffff66" },
+      4: { colorName: "Green", colorHex: "#66cc66" },
+      5: { colorName: "Blue", colorHex: "#66b2ff" },
+      6: { colorName: "Indigo", colorHex: "#5d3fd3" },
+      7: { colorName: "Violet", colorHex: "#b266ff" },
+      8: { colorName: "Pink", colorHex: "#ff66b3" },
+      9: { colorName: "Gold", colorHex: "#ffd700" }
+    };
+    return colors[n] || { colorName: "Mystery", colorHex: "#cccccc" };
+  }
+
+  function getElement(z) {
+    const elements = {
+      Fire: ["Aries", "Leo", "Sagittarius"],
+      Earth: ["Taurus", "Virgo", "Capricorn"],
+      Air: ["Gemini", "Libra", "Aquarius"],
+      Water: ["Cancer", "Scorpio", "Pisces"]
+    };
+    return Object.entries(elements).find(([_, signs]) => signs.includes(z))?.[0] || "Unknown";
+  }
+
+  function getMarriageAge(z) {
+    const ages = {
+      Aries: "28–32", Taurus: "30+", Gemini: "Late 30s", Cancer: "25–30",
+      Leo: "Late 30s", Virgo: "26–32", Libra: "27–31", Scorpio: "30–35",
+      Sagittarius: "32–36", Capricorn: "35–40", Aquarius: "35+", Pisces: "23–29"
+    };
+    return ages[z] || "???";
+  }
+
+  function getFutureKids(z) {
+    const kids = {
+      Aries: "2", Taurus: "3", Gemini: "1–2", Cancer: "3+",
+      Leo: "2–3", Virgo: "1–2", Libra: "2", Scorpio: "1–3",
+      Sagittarius: "2–4", Capricorn: "2", Aquarius: "1", Pisces: "2–3"
+    };
+    return kids[z] || "Maybe a pet?";
+  }
+
+  function getCareer(z) {
+    const careers = {
+      Aries: "Entrepreneur", Taurus: "Artist", Gemini: "Writer",
+      Cancer: "Counselor", Leo: "Performer", Virgo: "Analyst",
+      Libra: "Diplomat", Scorpio: "Detective", Sagittarius: "Teacher",
+      Capricorn: "Architect", Aquarius: "Inventor", Pisces: "Musician"
+    };
+    return careers[z] || "Explorer";
+  }
+
+  function getLoveMatch(z) {
+    const match = {
+      Aries: "Leo", Taurus: "Virgo", Gemini: "Libra", Cancer: "Pisces",
+      Leo: "Aries", Virgo: "Taurus", Libra: "Gemini", Scorpio: "Cancer",
+      Sagittarius: "Aries", Capricorn: "Taurus", Aquarius: "Libra", Pisces: "Scorpio"
+    };
+    return match[z] || "Someone amazing";
+  }
+
+  function resetForm() {
+    document.getElementById("profileForm").reset();
+    document.getElementById("bubbles").innerHTML = "";
+  }
+
+  function toggleDarkMode() {
+    document.body.classList.toggle("dark-mode");
+  }
+</script>
+</body>
+</html>
