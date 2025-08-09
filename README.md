@@ -21,10 +21,10 @@ future marriage age, career, kids, and love match — all based on your date of 
 emoji-rich UI, and dark mode for a fun experience!
 
 ### The Problem (that doesn't exist)
-[What ridiculous problem are you solving?]
+People need a fun way to find their lucky number and future destiny—because why not?
 
 ### The Solution (that nobody asked for)
-[How are you solving it? Keep it fun!]
+A playful app that adds up your birthday digits, reveals your lucky color, zodiac, and life predictions—all with emojis and dark mode for extra fun! 🎉🔮
 
 ## Technical Details
 ### Technologies/Components Used
