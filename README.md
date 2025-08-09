@@ -49,7 +49,8 @@ For Software:HTML , CSS , JS
 For Software:
 
 # Screenshots (Add at least 3)
-<img width="1870" height="917" alt="image" src="https://github.com/user-attachments/assets/5669f216-25e6-4abc-87e0-17c2de598e0e" />
+<img width="1864" height="920" alt="image" src="https://github.com/user-attachments/assets/bc59c3bd-3da2-476f-9c24-079a9344c43b" />
+
 
 
 <img width="1862" height="914" alt="image" src="https://github.com/user-attachments/assets/a19b4bd0-bcd6-4480-9a02-df3c071486d6" />
