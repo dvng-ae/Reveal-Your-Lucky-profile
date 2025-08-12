@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Red Dot Challenge</title>
+    <style>
+        body {
+            margin: 0;
+            height: 100vh;
+            background-color: white;
+            overflow: hidden;
+            position: relative;
+            font-family: Arial, sans-serif;
+        }
+        #dot {
+            width: 50px;
+            height: 50px;
+            background-color: red;
+            border-radius: 50%;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            cursor: pointer;
+            transition: all 0.1s ease;
+        }
+        #message {
+            position: absolute;
+            bottom: 20px;
+            width: 100%;
+            text-align: center;
+            font-size: 48px;
+            font-weight: bold;
+            color: black;
+        }
+        #attempts {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            font-size: 22px;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div id="dot"></div>
+    <div id="message"></div>
+    <div id="attempts">Attempts: 0</div>
+
+    <script>
+        const dot = document.getElementById('dot');
+        const message = document.getElementById('message');
+        const attemptsDisplay = document.getElementById('attempts');
+
+        let attempts = 0;
+        let startTime = 0;
+        let moveDelay = 100; // normal speed before 30 attempts
+
+        const malayalamMessages = [
+            "ആയോ ഓട്രാ....", 
+            "നാണം ഇല്ലെടാ !", 
+            "തരത്തിൽ പോയി കളിക്കെടാ !", 
+            "പോ മോനെ ദിനേശ !", 
+            "നിന്നെ കൊണ്ട് സാധിക്കില്ല !", 
+            "പോടാ ലൊട്ടേ !",
+            "സോത്രം കർത്താവേ സേത്രം !"
+        ];
+
+        function moveDot() {
+            const pageWidth = window.innerWidth - dot.offsetWidth;
+            const pageHeight = window.innerHeight - dot.offsetHeight;
+
+            const randomX = Math.random() * pageWidth;
+            const randomY = Math.random() * pageHeight;
+
+            dot.style.transition = `all ${moveDelay}ms ease`; // ✅ fixed
+            dot.style.left = `${randomX}px`; // ✅ fixed
+            dot.style.top = `${randomY}px`; // ✅ fixed
+
+            const randomMsg = malayalamMessages[Math.floor(Math.random() * malayalamMessages.length)];
+            message.textContent = randomMsg;
+        }
+
+        dot.addEventListener('mouseenter', () => {
+            attempts++;
+            attemptsDisplay.textContent = `Attempts: ${attempts}`; // ✅ fixed
+
+            moveDot();
+
+            // Increase dot size until 30 attempts
+            if (attempts < 30) {
+                dot.style.width = `${50 + attempts}px`; // ✅ fixed
+                dot.style.height = `${50 + attempts}px`; // ✅ fixed
+            }
+
+            // After 30 attempts → slow down
+            if (attempts >= 30) {
+                moveDelay = 600; // slow speed
+            }
+        });
+
+        dot.addEventListener('click', () => {
+            const reactionTime = Date.now() - startTime;
+            if (reactionTime < 300) {
+                message.textContent = "Great!";
+            } else {
+                message.textContent = "Good Job";
+            }
+        });
+
+        document.addEventListener('mousemove', () => {
+            startTime = Date.now();
+        });
+    </script>
+</body>
+</html>
